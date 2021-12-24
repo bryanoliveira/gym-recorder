@@ -71,6 +71,7 @@ class TransitionRecorderWrapper(gym.core.Wrapper):
     ):
         if type(new_obs) is dict:
             for agent_id in new_obs:
+                logging.debug(f"Recording transition for agent {self.agent_id}")
                 self.record_transition(
                     new_obs[agent_id],
                     action[agent_id],
@@ -92,7 +93,7 @@ class TransitionRecorderWrapper(gym.core.Wrapper):
         agent_id: int = 0,
     ):
         logging.debug(
-            f"Recording transitions: {self.last_obs} {action} {new_obs} {reward} {done} {info}"
+            f"Recording transition: {self.last_obs} {action} {new_obs} {reward} {done} {info}"
         )
         if agent_id not in self.obs_buffer:
             self.obs_buffer[agent_id] = []
@@ -117,8 +118,8 @@ class TransitionRecorderWrapper(gym.core.Wrapper):
         any_agent_id = list(self.obs_buffer.keys())[0]
         self.n_transitions += len(self.obs_buffer[any_agent_id])
 
-        logging.info(f"Buffering episode {self.episode_id}")
-        logging.info(f"Current buffer size: {self.n_transitions}")
+        logging.debug(f"Buffering episode {self.episode_id}")
+        logging.debug(f"Current buffer size: {self.n_transitions}")
 
         for agent_id in self.obs_buffer:
             episode = {
@@ -154,4 +155,5 @@ class TransitionRecorderWrapper(gym.core.Wrapper):
         self.reward_buffer = {}
         self.done_buffer = {}
         self.info_buffer = {}
+        logging.debug(f"Starting new episode {self.episode_id}")
 
